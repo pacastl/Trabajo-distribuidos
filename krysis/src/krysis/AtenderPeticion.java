@@ -20,22 +20,25 @@ public class AtenderPeticion implements Runnable {
 
 	}
 	
-	
-
 	@Override
 	public void run() {
 		
 		try(ObjectOutputStream out=new ObjectOutputStream(this.socket.getOutputStream());
 			DataInputStream in=new DataInputStream(this.socket.getInputStream());
-			DataOutputStream out2=new DataOutputStream(this.socket.getOutputStream());
-				)
-			{
-			Tablero tablero = new Tablero(11,7,TABLEROS[0]);
+			DataOutputStream out2=new DataOutputStream(this.socket.getOutputStream());)
+		{
+			int n = (int)Math.floor(Math.random()*4);
+			Tablero tablero = new Tablero(11,7,TABLEROS[n]);
 			out.writeObject(tablero);//Envía el tablero al cliente
+			out.flush();
 			
 			while(!tablero.estaCompleto())
 			{
 				String leido=in.readLine();//Se comprueba en el cliente que pasa todos los parámetros bien
+				while(leido==null)
+				{
+					leido=in.readLine();
+				}
 				String trozos[]=leido.split(" ");
 				
 				int fila=Integer.parseInt(trozos[0]);
@@ -44,16 +47,14 @@ public class AtenderPeticion implements Runnable {
 				
 				String msg="";
 				//Usamos los datos que nos pasa el cliente
-				if(tablero.ponerLetra(fila, col,letra )) {
+				if(tablero.ponerLetra(fila, col,letra )) { 
 					msg="Correcto";
 				}else {
 					msg="Error";	
 				}
-				tablero.mostrar();
+				//tablero.mostrar();
 				out2.writeBytes(msg+"\r\n");
 				out2.flush();
-				out.writeObject(tablero);
-				out.flush();
 			}
 			
 //			

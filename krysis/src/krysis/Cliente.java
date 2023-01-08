@@ -6,8 +6,6 @@ import java.util.*;
 
 public class Cliente 
 {
-	public static final String[][] TABLEROS = { {"MONEDAS"},{"ASESORA"},{"NI","PLAN"},{"TAPIOCA"},{"ENEA","ER"},{"Q","GRAL"},{"USA","DIA"},{"IERRA","S"},{"LR","ALAN"},{"LIGNITO"},{"AOVADOS"}};
-
 	public static void main(String[] args) 
 	{
 		
@@ -52,18 +50,22 @@ public class Cliente
 				 		}
 					}
 					System.out.println("");
-					System.out.println(in2.readLine());
+					
+					String msg=in2.readLine();
+					
+					System.out.println(msg);
 					System.out.println("");
-					tablero=(Tablero) in.readObject();//Leemos el tablero actualizado
-					tablero.mostrar();
+					
+					if(msg.equals("Correcto")) { //Si el servidor devuelve correcto añade la letra
+						tablero.ponerLetra(fila, columna,letra );
+					}
+					tablero.mostrar();//mostramos el tablero actualizado con la letra colocada
 				}
 				System.out.println("¡¡¡ENHORABUENA!!! Lo has completado correctamente.");
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-
-
+			} 
 		}catch(IOException ex) {
 			ex.printStackTrace();
 		}
@@ -92,14 +94,12 @@ public class Cliente
 	public static int leerInt()
 	{
 		String cadena = leer();
-		int valor = new Integer(cadena);
-		return valor;
-	}
-	
-	public static float leerFloat()
-	{
-		String cadena = leer();
-		float  valor = new Float(cadena);
-		return valor;
+		try {
+			int valor = Integer.parseInt(cadena);
+			return valor;
+		}catch(NumberFormatException e)
+		{
+			return -1;
+		}
 	}
 }
